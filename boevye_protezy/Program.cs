@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-//using CppClasses;
+using CppClasses;
 namespace boevye_protezy
 {
 	internal class Program
 	{
-		static void Main(string[] args)
+		static void Main()
 		{
-			Console.WriteLine("Hello, World!");
-			//MouseController mc = new MouseController();
-			//Console.WriteLine(mc.GetHelloWorld());
-			MouseController mouse = new MouseController();
-			Random rnd = new Random();
+			CallibriSensor sensor = Sensor.GetSensor(4000);
+			DataComputer computer = new DataComputer();
+			Sensor.Start(sensor, computer.Compute);
 		}
 	}
 }
