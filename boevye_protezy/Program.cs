@@ -1,12 +1,14 @@
 ﻿using CppClasses;
 using NeuroSDK;
 using System;
+using Vectors;
 namespace boevye_protezy
 {
 	internal class Program
 	{
 		static void Main()
 		{
+
 			CallibriSensor sensor = Sensor.GetSensor(4000);
 			Console.WriteLine(sensor);
 
@@ -20,6 +22,7 @@ namespace boevye_protezy
 			//sensor.EventMEMSDataRecived -= Sensor_EventMEMSDataRecived;
 			//sensor.ExecCommand(SensorCommand.CommandStopMEMS);
 
+			sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
 
 			sensor.EventQuaternionDataRecived += Sensor_EventQuaternionDataRecived;
 			sensor.ExecCommand(SensorCommand.CommandStartAngle);
@@ -48,12 +51,17 @@ namespace boevye_protezy
 		{
 			for (int i = 0; i < data.Length; i++)
 			{
-				Console.SetCursorPosition(0, 0);
-				Console.WriteLine(data[i].W);
-				Console.WriteLine(data[i].X);
-				Console.WriteLine(data[i].Y);
-				Console.WriteLine();
+				double w = data[i].W;
+				double x = data[i].X;
+				double y = data[i].Y;
+				double z = data[i].Z;
 
+				double teta = 2 * Math.Acos(w);
+
+				vec3 vec = new vec3(x, y, z) / Math.Sin(teta/2);
+
+
+				Console.WriteLine(teta + "\t" +vec + "\t" + vec.Length());
 			}
 		}
 	}
