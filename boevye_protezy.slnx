@@ -6,4 +6,5 @@
   </Configurations>
   <Project Path="boevye_protezy/boevye_protezy.csproj" />
   <Project Path="CppClasses/CppClasses.vcxproj" />
+  <Project Path="Mouse/Mouse.vcxproj" Id="bb9c9d24-9e93-4c66-8558-4b2256d685f4" />
 </Solution>
