@@ -36,22 +36,20 @@ namespace boevye_protezy
 			Console.WriteLine("DONE");
 			return sensor;
 		}
-		//public static void Start(CallibriSensor sensor)
-		//{
-
-		//	sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
-
-		//	sensor.EventQuaternionDataRecived += Sensor_EventQuaternionDataRecived;
-		//	sensor.ExecCommand(SensorCommand.CommandStartAngle);
-
-		//	sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
-		//	Console.Clear();
-		//	System.Threading.Thread.Sleep(1000000);
-		//	sensor.EventQuaternionDataRecived -= Sensor_EventQuaternionDataRecived;
-		//	sensor.ExecCommand(SensorCommand.CommandStopAngle);
-
-		//	sensor.Disconnect();
-		//	sensor.Dispose();
-		//}
+		public static void Start(CallibriSensor sensor, QuaternionDataRecived dataComputerMethod) 
+		{
+			sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
+			sensor.EventQuaternionDataRecived += dataComputerMethod;
+			sensor.ExecCommand(SensorCommand.CommandStartAngle);
+			while (true)
+			{
+				if (Console.Read() == 's')
+					break;
+			}
+			sensor.EventQuaternionDataRecived -= dataComputerMethod;
+			sensor.ExecCommand(SensorCommand.CommandStopAngle);
+			sensor.Disconnect();
+			sensor.Dispose();
+		}
 	}
 }
