@@ -9,7 +9,9 @@ namespace boevye_protezy
 	{
 		public static CallibriSensor GetSensor(int delay)
 		{
+			Console.Write("Создание сканера... ");
 			Scanner scanner = new Scanner(SensorFamily.SensorLECallibri);
+			Console.WriteLine("DONE");
 			scanner.Start();
 			Console.Write("Поиск... ");
 			System.Threading.Thread.Sleep(delay);

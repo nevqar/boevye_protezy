@@ -7,8 +7,14 @@ namespace boevye_protezy
 	{
 		static void Main()
 		{
-			CallibriSensor s = Sensor.GetSensor(3000);
-			Console.WriteLine(s);
+			CallibriSensor sensor = Sensor.GetSensor(3000);
+			Console.WriteLine(sensor);
+
+			var commands = sensor.Commands;
+
+
+			sensor.Disconnect();
+			sensor.Dispose();
 		}
 	}
 }
