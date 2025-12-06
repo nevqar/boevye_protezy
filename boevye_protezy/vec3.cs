@@ -1,7 +1,7 @@
 using System;
 namespace Vectors
 {
-	struct vec3
+	public struct vec3
 	{
 		public double x, y, z;
 		

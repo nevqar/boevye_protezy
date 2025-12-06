@@ -9,32 +9,24 @@ namespace boevye_protezy
 		static void Main()
 		{
 
-			CallibriSensor sensor = Sensor.GetSensor(4000);
-			Console.WriteLine(sensor);
+			//CallibriSensor sensor = Sensor.GetSensor(4000);
+			//Console.WriteLine(sensor);
 
-			//sensor.EventMEMSDataRecived += Sensor_EventMEMSDataRecived;
-			//sensor.ExecCommand(SensorCommand.CommandStartMEMS);
+			//sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
 
+			//sensor.EventQuaternionDataRecived += Sensor_EventQuaternionDataRecived;
+			//sensor.ExecCommand(SensorCommand.CommandStartAngle);
+
+			//sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
 			//Console.Clear();
-
 			//System.Threading.Thread.Sleep(1000000);
-
-			//sensor.EventMEMSDataRecived -= Sensor_EventMEMSDataRecived;
-			//sensor.ExecCommand(SensorCommand.CommandStopMEMS);
-
-			sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
-
-			sensor.EventQuaternionDataRecived += Sensor_EventQuaternionDataRecived;
-			sensor.ExecCommand(SensorCommand.CommandStartAngle);
-			Console.Clear();
-			System.Threading.Thread.Sleep(1000000);
-			sensor.EventQuaternionDataRecived -= Sensor_EventQuaternionDataRecived;
-			sensor.ExecCommand(SensorCommand.CommandStopAngle);
+			//sensor.EventQuaternionDataRecived -= Sensor_EventQuaternionDataRecived;
+			//sensor.ExecCommand(SensorCommand.CommandStopAngle);
 
 
 
-			sensor.Disconnect();
-			sensor.Dispose();
+			//sensor.Disconnect();
+			//sensor.Dispose();
 		}
 		static private void Sensor_EventMEMSDataRecived(ISensor sensor, MEMSData[] data)
 		{
@@ -56,12 +48,11 @@ namespace boevye_protezy
 				double y = data[i].Y;
 				double z = data[i].Z;
 
-				double teta = 2 * Math.Acos(w);
-
-				vec3 vec = new vec3(x, y, z) / Math.Sin(teta/2);
-
-
-				Console.WriteLine(teta + "\t" +vec + "\t" + vec.Length());
+				quaternion q = new quaternion(w, x, y, z);
+				vec3 v = 100 * q.Rotate(new vec3(0, 0, 1));
+				Console.Write((int)v.x);
+				Console.Write("\t");
+				Console.WriteLine((int)v.z);
 			}
 		}
 	}
