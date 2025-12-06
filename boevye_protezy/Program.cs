@@ -11,7 +11,10 @@ namespace boevye_protezy
 			Console.WriteLine(sensor);
 
 			var commands = sensor.Commands;
-
+			for (int i = 0; i < commands.Count; i++)
+			{
+				Console.WriteLine(commands[i]);
+			}
 
 			sensor.Disconnect();
 			sensor.Dispose();
