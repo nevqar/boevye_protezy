@@ -56,6 +56,13 @@ namespace Vectors
 		{
 			return a.x * b.x + a.y * b.y + a.z * b.z;
 		}
+		public static vec3 Cross(vec3 a, vec3 b)
+		{
+			return new vec3(
+				a.y * b.z - a.z * b.y,
+				a.z * b.x - a.x * b.z,
+				a.x * b.y - a.y * b.x);
+		}
 		public static vec3 Max(vec3 a, double b)
 		{
 			return new vec3(Math.Max(a.x, b), Math.Max(a.y, b), Math.Max(a.z, b));

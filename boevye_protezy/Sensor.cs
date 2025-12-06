@@ -36,17 +36,26 @@ namespace boevye_protezy
 			Console.WriteLine("DONE");
 			return sensor;
 		}
-		public static void Start(CallibriSensor sensor, QuaternionDataRecived dataComputerMethod) 
+		public static void Start(CallibriSensor sensor, DataComputer dataComputer) 
 		{
 			sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
-			sensor.EventQuaternionDataRecived += dataComputerMethod;
+			sensor.EventQuaternionDataRecived += dataComputer.Compute;
 			sensor.ExecCommand(SensorCommand.CommandStartAngle);
-			while (true)
+			bool stop = false;
+			while (!stop)
 			{
-				if (Console.Read() == 's')
-					break;
+				char c = (char)Console.Read();
+				switch (c)
+				{
+					case 's': //stop
+						stop = true;
+						break;
+					case 'c': //cancel
+						dataComputer.Calibrate();
+						break;
+				}
 			}
-			sensor.EventQuaternionDataRecived -= dataComputerMethod;
+			sensor.EventQuaternionDataRecived -= dataComputer.Compute;
 			sensor.ExecCommand(SensorCommand.CommandStopAngle);
 			sensor.Disconnect();
 			sensor.Dispose();
