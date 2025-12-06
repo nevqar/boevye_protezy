@@ -24,6 +24,7 @@
 #include "dllmain.h"
 #include <iostream>
 #include <string>
+#include "pch.h"
 
 const int screenWidth = GetSystemMetrics(SM_CXSCREEN), screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
@@ -37,10 +38,10 @@ const int screenWidth = GetSystemMetrics(SM_CXSCREEN), screenHeight = GetSystemM
 //    return a * b;
 //}
 //
-//// Функция приветствия
-__declspec(dllexport) void greet(char name) {
-    std::cout << "Привет, " << name << "!" << std::endl;
-}
+// Функция приветствия
+//__declspec(dllexport) void greet(char name) {
+//    std::cout << "Привет, " << name << "!" << std::endl;
+//}
 
 
 //Устанавливает позицию курсора на координаты (x, y) в пикселях

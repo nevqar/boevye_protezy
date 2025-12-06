@@ -12,10 +12,10 @@
 // Простые функции для примера
 ///*extern "C"*/ __declspec(dllimport) int add(int a, int b);
 ///*extern "C"*/ __declspec(dllimport) int multiply(int a, int b);
-/*extern "C"*/ __declspec(dllimport) void greet(char name);
+///*extern "C"*/ __declspec(dllimport) void greet(char name);
 
 /*extern "C"*/ __declspec(dllimport) void SetCursorPosition(int x, int y);
-/*extern "C"*/ __declspec(dllimport) void LeftСlick();
+extern "C" __declspec(dllimport) void LeftСlick();
 /*extern "C"*/ __declspec(dllimport) void RightClick();
 /*extern "C"*/ __declspec(dllimport) int GetWindowWidth();
 /*extern "C"*/ __declspec(dllimport) int GetWindowHeight();
