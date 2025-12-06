@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="XNeuroSDK" Version="1.0.9.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CppClasses\CppClasses.vcxproj" />
   </ItemGroup>
 
