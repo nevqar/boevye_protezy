@@ -14,4 +14,10 @@ extern "C" MYDLL_API int add(int a, int b);
 extern "C" MYDLL_API int multiply(int a, int b);
 extern "C" MYDLL_API void greet(const char* name);
 
+extern "C" MYDLL_API void SetCursorPosition(int x, int y);
+extern "C" MYDLL_API void Left—lick();
+extern "C" MYDLL_API void RightClick();
+extern "C" MYDLL_API int GetWindowWidth();
+extern "C" MYDLL_API int GetWindowHeight();
+
 #endif
