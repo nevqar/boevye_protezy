@@ -2,6 +2,7 @@
 using CppClasses;
 using NeuroSDK;
 using Vectors;
+using System.IO;
 namespace boevye_protezy
 {
 	internal class Program
@@ -14,7 +15,7 @@ namespace boevye_protezy
 			1, 0, 0);
 			matrix3x3 b = a.Inverse();
 
-			CallibriSensor sensor = Sensor.GetSensor(4000);
+			CallibriSensor sensor = Sensor.GetSensor();
 			DataComputer computer = new DataComputer();
 			Sensor.Start(sensor, computer);
 		}

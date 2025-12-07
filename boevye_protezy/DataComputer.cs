@@ -44,9 +44,10 @@ namespace boevye_protezy
 			}
 		}
 		double sum;
-		int mass;
+		Queue<double> lastNSamples = new Queue<double>();
+		int n = 1000;
 		Stopwatch sw = Stopwatch.StartNew();
-		int delay = 50;
+		int delay = 600;
 		public void ComputeEMG(ISensor sensor, CallibriSignalData[] data)
 		{
 			for (int i = 0; i < data.Length; i++)
@@ -54,26 +55,27 @@ namespace boevye_protezy
 				var samples = data[i].Samples;
 				for (int j = 0; j < samples.Length; j++)
 				{
-					double sample = samples[j] * 10000;
+					double sample = Math.Abs(samples[j] * 10000);
+					lastNSamples.Enqueue(sample);
 					sum += sample;
-					mass++;
-					double average = sum / mass;
+
+					if (lastNSamples.Count > n)
+					{
+						sum -= lastNSamples.Dequeue();
+					}
+
+					double average = sum / lastNSamples.Count;
 					double difference = sample - average;
 					double square = difference * difference;
 
-					if (square >= 4.5)
+					if (square >= 8)
 					{
-						sum -= sample;
-						mass--;
 						if (sw.ElapsedMilliseconds >= delay)
 						{
-							Console.BackgroundColor = ConsoleColor.Green;
 							mouse.LeftClick();
 							sw.Restart();
 						}
 					}
-					Console.WriteLine(square);
-					Console.BackgroundColor = ConsoleColor.Black;
 				}
 			}
 		}
