@@ -1,10 +1,11 @@
-﻿using System;
+﻿using NeuroSDK;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using Vectors;
-using NeuroSDK;
-using System.Diagnostics;
 
 namespace boevye_protezy
 {
@@ -24,6 +25,9 @@ namespace boevye_protezy
 		}
 		private vec3 lforward = new vec3(1, 0, 0);
 		private matrix3x3 lmatrix = matrix3x3.identity;
+		private Queue<vec2> lastMvecs = new Queue<vec2>();
+		vec2 vecSum;
+		private int m = 20;
 		public void ComputeQuaternion(ISensor sensor, QuaternionData[] data)
 		{
 			for (int i = 0; i < data.Length; i++)
@@ -40,7 +44,13 @@ namespace boevye_protezy
 				compensation = matrix3x3.ZRotation(0.00036) * compensation;
 
 				vec2 v = new vec2(-forward.y, -forward.z);
-				MouseControl(v);
+				vecSum += v;
+				lastMvecs.Enqueue(v);
+				if (lastMvecs.Count > m)
+				{
+					vecSum -= lastMvecs.Dequeue();
+				}
+				MouseControl(vecSum / lastMvecs.Count);
 			}
 		}
 		double sum;

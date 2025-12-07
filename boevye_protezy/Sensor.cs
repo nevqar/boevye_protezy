@@ -101,7 +101,8 @@ namespace boevye_protezy
 			sensor.ExecCommand(SensorCommand.CommandStartSignal);
 			Console.Clear();
 			Console.SetCursorPosition(0, 0);
-			Console.WriteLine("Запущено. Для помощи введите 'h'");
+			Console.WriteLine("Запущено. Подождите примерно 20 секунд, затем наведите голоау на центр экрана и выполните калибровку введя 'c");
+			Console.WriteLine("Для помощи введите 'h'");
 			bool stop = false;
 			while (!stop)
 			{
