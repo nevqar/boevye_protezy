@@ -38,9 +38,15 @@ namespace boevye_protezy
 		}
 		public static void Start(CallibriSensor sensor, DataComputer dataComputer) 
 		{
+
 			sensor.ExecCommand(SensorCommand.CommandResetQuaternion);
-			sensor.EventQuaternionDataRecived += dataComputer.Compute;
+			sensor.SignalTypeCallibri = CallibriSignalType.EMG;
+
+			sensor.EventQuaternionDataRecived += dataComputer.ComputeQuaternion;
 			sensor.ExecCommand(SensorCommand.CommandStartAngle);
+			sensor.EventCallibriSignalDataRecived += dataComputer.ComputeEMG;
+			sensor.ExecCommand(SensorCommand.CommandStartSignal);
+
 			bool stop = false;
 			while (!stop)
 			{
@@ -55,8 +61,10 @@ namespace boevye_protezy
 						break;
 				}
 			}
-			sensor.EventQuaternionDataRecived -= dataComputer.Compute;
 			sensor.ExecCommand(SensorCommand.CommandStopAngle);
+			sensor.EventQuaternionDataRecived -= dataComputer.ComputeQuaternion;
+			sensor.ExecCommand(SensorCommand.CommandStopSignal);
+			sensor.EventCallibriSignalDataRecived -= dataComputer.ComputeEMG;
 			sensor.Disconnect();
 			sensor.Dispose();
 		}

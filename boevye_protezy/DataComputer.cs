@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Text;
 using Vectors;
 using NeuroSDK;
+using System.Diagnostics;
 
 namespace boevye_protezy
 {
@@ -11,7 +12,19 @@ namespace boevye_protezy
 	{
 		public DataComputer() { }
 		private MouseController mouse = new MouseController();
-		public void Compute(ISensor sensor, QuaternionData[] data)
+		matrix3x3 matrix;
+		private matrix3x3 onCenter = new matrix3x3(
+			0, 0, -1,
+			0, 1, 0,
+			1, 0, 0);
+		private matrix3x3 compensation = matrix3x3.identity;
+		public void Calibrate()
+		{
+			compensation = onCenter * matrix.Inverse();
+		}
+		private vec3 lforward = new vec3(1, 0, 0);
+		private matrix3x3 lmatrix = matrix3x3.identity;
+		public void ComputeQuaternion(ISensor sensor, QuaternionData[] data)
 		{
 			for (int i = 0; i < data.Length; i++)
 			{
@@ -21,44 +34,48 @@ namespace boevye_protezy
 				double z = data[i].Z;
 
 				quaternion q = new quaternion(w, x, y, z);
+				matrix = q.ToMatrix();
+				vec3 forward = compensation * (matrix * new vec3(0, 0, -1));
 
-				vec2 v = ComplicatedCalculations(q);
+				compensation = matrix3x3.ZRotation(0.00036) * compensation;
 
+				vec2 v = new vec2(-forward.y, -forward.z);
 				MouseControl(v);
 			}
 		}
-		public void Calibrate()
+		double sum;
+		int mass;
+		Stopwatch sw = Stopwatch.StartNew();
+		int delay = 50;
+		public void ComputeEMG(ISensor sensor, CallibriSignalData[] data)
 		{
-			compensation = GetCompensation(lastEnd, new vec3(0, -1, 0));
-			Console.WriteLine(compensation.w);
-			Console.WriteLine(compensation.x);
-			Console.WriteLine(compensation.y);
-			Console.WriteLine(compensation.z);
-		}
-		vec3 lastEnd = new vec3(0, 0, 1);
-		private quaternion compensation = new quaternion(1, 0, 0, 0);
-		private vec2 ComplicatedCalculations(quaternion q)
-		{
-			vec3 start = new vec3(0, 0, 1);
-			vec3 end = compensation.Rotate(q.Rotate(start));
-			lastEnd = end;
-			return new vec2(end.x, end.z);
-		}
-		private quaternion GetCompensation(vec3 value, vec3 required)
-		{
-			value = value.Normalize();
-			required = required.Normalize();
-			vec3 u = vec3.Cross(required, value);
-			u = u.Normalize();
+			for (int i = 0; i < data.Length; i++)
+			{
+				var samples = data[i].Samples;
+				for (int j = 0; j < samples.Length; j++)
+				{
+					double sample = samples[j] * 10000;
+					sum += sample;
+					mass++;
+					double average = sum / mass;
+					double difference = sample - average;
+					double square = difference * difference;
 
-			double theta = Math.Acos(vec3.Dot(required, value));
-
-			double w = Math.Cos(theta / 2);
-			double x = Math.Sin(theta / 2) * u.x;
-			double y = Math.Sin(theta / 2) * u.y;
-			double z = Math.Sin(theta / 2) * u.z;
-
-			return new quaternion(w, x, y, z).Invert();
+					if (square >= 4.5)
+					{
+						sum -= sample;
+						mass--;
+						if (sw.ElapsedMilliseconds >= delay)
+						{
+							Console.BackgroundColor = ConsoleColor.Green;
+							mouse.LeftClick();
+							sw.Restart();
+						}
+					}
+					Console.WriteLine(square);
+					Console.BackgroundColor = ConsoleColor.Black;
+				}
+			}
 		}
 		private void MouseControl(vec2 v)
 		{
@@ -66,7 +83,7 @@ namespace boevye_protezy
 			int height = mouse.GetScreenHeight();
 			v *= 1;
 			int x = (int)(v.x * width + width / 2);
-			int y = (int)(-v.y * height + height / 2);
+			int y = (int)(-v.y * width + height / 2);
 			mouse.SetCursorPosition(x, y);
 		}
 	}
